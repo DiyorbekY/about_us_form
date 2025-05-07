@@ -1,24 +1,24 @@
-from django.http import HttpResponse
-from .models import Countries,Employees,Jobs
-from django.db.models import Count
+from django.shortcuts import render
+from .models import Person
+# Create your views here.
+def main(request):
+    if request.POST:
+        model = Person()
+        model.first_name = request.POST.get('first_name','')
+        model.last_name = request.POST.get('last_name','')
+        model.company = request.POST.get('company', '')
+        model.email = request.POST.get('email', '')
+        model.phone = request.POST.get('area_code', '') + request.POST.get('phone', '')
+        model.course_type = request.POST.get('course_type', '')
+        model.subject = request.POST.get('subject', '')
+        model.exist = request.POST.get('exist', '')
+        model.save()
+        print(request.POST)
+    return render(request,'index.html')
 
-def my_list(request):
-    # queryset = Employees.objects.filter(Q(first_name__endswith='a') & Q(last_name__endswith='z'))
-    # print(queryset.query)
-    # country_list = ""
-    # for c in queryset:
-    #     country_list += f"<li>{c.first_name} {c.last_name}</li>"
-    # return HttpResponse(f"<ol>{country_list}</ol>")
-    # queryset=Jobs.objects.prefetch_related('employees_set').annotate(soni=Count('job_id'))
-    # print(queryset.query)
-    # country_list=''
-    # for c in queryset:
-    #     country_list += f"<li>{c}</li>"
-    # return HttpResponse(f"<ol>{country_list}</ol>")
 
-    queryset = Jobs.objects.annotate(employee_soni=Count('employees'))
-    country_list = ''
-    for c in queryset:
-        country_list += f"<li>{c.job_title} — {c.employee_soni} ta xodim</li>"
+# def register(request):
+#     if request.POST:
 
-    return HttpResponse(f"<ol>{country_list}</ol>")
+#         print(request.POST)
+#     return render(request,'register.html')
